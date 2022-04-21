@@ -1,0 +1,52 @@
+version: "3.7"
+
+services:
+        kafka1:
+                image: cyon13/kafka:1.0
+                container_name: kafka1
+                hostname: kafka1
+                #restart: on-failure
+                environment:
+                    - BROKER_ID=1
+                volumes:
+                   - kafka1_logs:/usr/local/kafka/logs
+ 
+        kafka2:
+                image: cyon13/kafka:1.0
+                container_name: kafka2
+                hostname: kafka2
+                #restart: on-failure
+                environment:
+                    - BROKER_ID=2
+                volumes:
+                   - kafka2_logs:/usr/local/kafka/logs
+
+
+        kafka3:
+                image: cyon13/kafka:1.0
+                container_name: kafka3
+                hostname: kafka3
+                #restart: on-failure
+                environment:
+                        - BROKER_ID=3
+                volumes:
+                   - kafka3_logs:/usr/local/kafka/logs
+        
+        kafdrop:
+                image: obsidiandynamics/kafdrop
+                #restart: "always"
+                ports:
+                    - "9000:9000"
+                environment:
+                        KAFKA_BROKERCONNECT: "kafka1:9092,kafka2:9092,kafka3:9092"
+                        JVM_OPTS: "-Xms32M -Xmx64M"
+        
+volumes:
+        kafka1_logs:
+        kafka2_logs:
+        kafka3_logs:
+
+networks:
+        default:
+                external:
+                        name: hadoop_eco     
